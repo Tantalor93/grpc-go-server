@@ -1,0 +1,38 @@
+//
+// DNS forwarding decision service protobuffer specification
+//
+syntax = "proto3";
+
+option go_package = "./proto";
+
+package dnsforwardingdecision.v1;
+
+// DNSForwardingDecisionService evaluates custom DNS resolution for domain
+service DNSForwardingDecisionService {
+  // EvaluateCustomDNSResolution evaluates custom DNS resolution
+  rpc EvaluateCustomDNSResolution(EvaluationRequest) returns (EvaluationResponse);
+}
+
+message EvaluationRequest {
+  // customer_id ID of customer
+  string customer_id = 1;
+
+  // domain to evaluate custom DNS resolution for
+  string domain = 2;
+}
+
+message EvaluationResponse {
+  // zone_forwarding flag indicates that request should be forwarded and handled by custom nameserver
+  bool zone_forwarding = 1;
+
+  // forwarding_rule defines request forwarding configuration
+  repeated ForwardingRule forwarding_rule = 2;
+}
+
+message ForwardingRule {
+  // nameserver defines the IP of nameserver that the request should be forwarded to
+  string nameserver = 1;
+
+  // route_id to use when routing to the nameserver
+  string route_id = 2;
+}
